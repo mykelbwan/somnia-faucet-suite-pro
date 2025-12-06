@@ -29,14 +29,18 @@ contract TestDrops {
 
     receive() external payable {}
 
-    function claimNative(address to, uint256 amount) external {
+    function claimNative(address to, uint256 amount) external Owner {
         if (amount > maxNativeClaim) revert ExceedsMaxClaim();
         if (address(this).balance < amount) revert NotEnoughBalance();
         (bool ok, ) = payable(to).call{value: amount}("");
         if (!ok) revert ClaimFail();
     }
 
-    function claimERC20(address token, address to, uint256 amount) external {
+    function claimERC20(
+        address token,
+        address to,
+        uint256 amount
+    ) external Owner {
         IERC20 erc20 = IERC20(token);
         if (amount > maxClaimERC20) revert ExceedsMaxClaim();
         if (amount > erc20.balanceOf(address(this))) revert NotEnoughBalance();
