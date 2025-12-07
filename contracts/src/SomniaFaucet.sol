@@ -7,12 +7,13 @@ interface IERC20 {
     function balanceOf(address account) external view returns (uint256);
 }
 
-contract TestDrops {
+contract SomniaFaucet {
     address public owner;
 
     error ClaimFail();
     error Unauthorized();
     error InvalidToken();
+    error NotEnoughBalance();
 
     constructor() {
         owner = msg.sender;
@@ -26,10 +27,7 @@ contract TestDrops {
     receive() external payable {}
 
     function claimNative(address to, uint256 amount) external Owner {
-        if (address(this).balance < amount) {
-            (bool ok, ) = payable(to).call{value: address(this).balance}("");
-            if (!ok) revert ClaimFail();
-        }
+        if (address(this).balance < amount) revert NotEnoughBalance();
         (bool ok, ) = payable(to).call{value: amount}("");
         if (!ok) revert ClaimFail();
     }
@@ -40,11 +38,8 @@ contract TestDrops {
         uint256 amount
     ) external Owner {
         IERC20 erc20 = IERC20(token);
-        if (amount > erc20.balanceOf(address(this))) {
-            // if requesting amount is greater than contract balance ? send the user remaining balance
-            bool ok = erc20.transfer(to, erc20.balanceOf(token));
-            if (!ok) revert ClaimFail();
-        }
+        if (amount > erc20.balanceOf(address(this))) revert NotEnoughBalance();
+
         bool ok = erc20.transfer(to, amount);
         if (!ok) revert ClaimFail();
     }
