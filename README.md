@@ -1,4 +1,4 @@
-# Somnia Faucet
+# Somnia Faucet Suite
 
 This project provides a faucet for the Somnia network, allowing users to claim test tokens. The faucet is accessible via a backend API, a Discord bot, and a Telegram bot.
 
