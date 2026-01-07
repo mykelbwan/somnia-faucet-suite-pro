@@ -14,7 +14,7 @@ export const TOKEN_CONFIG: Record<string, TokenSettings> = {
     endpoint: claimNative,
     address: null,
   },
-  
+
   FS: {
     endpoint: claimERC,
     address: "0x174bfb87F8B69619352879fd66116b705121efe6",
@@ -22,5 +22,10 @@ export const TOKEN_CONFIG: Record<string, TokenSettings> = {
 };
 
 // This takes ["STT", "USDC", "FS"] and turns it into "STT|USDC|FS"
-const tokenPattern = Object.keys(TOKEN_CONFIG).join('|');
-export const FAUCET_REGEX = new RegExp(`!(${tokenPattern})\\s+(0x[a-fA-F0-9]{40})`, 'i');
+const tokenPattern = Object.keys(TOKEN_CONFIG).join("|");
+// export const FAUCET_REGEX = new RegExp(`!(${tokenPattern})\\s+(0x[a-fA-F0-9]{40})`, 'i');
+// This handles: !STT <wallet> OR /faucet STT <wallet>
+export const FAUCET_REGEX = new RegExp(
+  `^(?:!(${tokenPattern})|[/]faucet\\s+(${tokenPattern}))\\s+(0x[a-fA-F0-9]{40})`,
+  "i"
+);

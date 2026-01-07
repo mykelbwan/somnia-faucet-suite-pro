@@ -12,11 +12,11 @@ bot.onText(FAUCET_REGEX, async (msg, match) => {
 
   if (!match) return bot.sendMessage(chatId, "Invalid command");
 
-  const command = match[1]?.toUpperCase();
+  const command = match[1] || match[2]?.toUpperCase();
 
   if (!command) throw new Error("Invalid Command");
 
-  const wallet = match[2];
+  const wallet = match[3];
 
   try {
     const config = TOKEN_CONFIG[command];
@@ -46,21 +46,24 @@ bot.onText(FAUCET_REGEX, async (msg, match) => {
   }
 });
 
-
-bot.onText(/!(tokens|supported|faucet|help)/i, (msg) => {
+// Matches !tokens, /tokens, /tokens@botname, !help, /help, etc.
+bot.onText(/^[!\/](tokens|supported|faucet|help)(?:@\w+)?$/i, (msg) => {
   const chatId = msg.chat.id;
-  const tokenList = Object.keys(TOKEN_CONFIG); 
+  const tokenList = Object.keys(TOKEN_CONFIG);
+
   const response = `
-<b>Somnia Faucet Suite</b>
+<b>🚀 Somnia Faucet Guide</b>
 
-Use <code>![TOKEN] [ADDRESS]</code> to claim.
+To claim tokens, use the format:
+<code>![TOKEN] [WALLET]</code>
 
-<b>Supported Tokens:</b>
-${tokenList.map(t => `• <code>!${t}</code>`).join('\n')}
+<b>Supported Assets:</b>
+${tokenList.map((t) => `• <code>!${t}</code>`).join("\n")}
 
 <b>Example:</b>
-<code>!STT 0x123...</code>
-  `;
+<code>!STT 0x123...456</code>
+
+<i>Note: Each token has an individual 24h cooldown.</i>`;
 
   bot.sendMessage(chatId, response, { parse_mode: "HTML" });
 });
