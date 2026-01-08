@@ -7,6 +7,9 @@ const app: Express = express();
 app.set('trust proxy', 1);
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.send("Faucet Backend is Online!");
+});
 app.use("/api/faucet", faucet);
 
 export default app;
