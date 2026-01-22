@@ -1,13 +1,5 @@
-import "dotenv/config";
-
-export interface TokenSettings {
-  endpoint: string;
-  address: string | null;
-}
-
-const MAIN_ENTRY = process.env.MAIN_ENTRY;
-const claimNative = `${MAIN_ENTRY}/api/faucet/claim-stt`;
-const claimERC = `${MAIN_ENTRY}/api/faucet/claim-erc20`;
+import { claimERC, claimNative } from "./routes";
+import { TokenSettings } from "../interface/interface";
 
 export const TOKEN_CONFIG: Record<string, TokenSettings> = {
   STT: {
@@ -26,3 +18,5 @@ export const FAUCET_REGEX = new RegExp(
   `^(?:!(${tokenPattern})|[/]help\\s+(${tokenPattern}))\\s+(0x[a-fA-F0-9]{40})`,
   "i"
 );
+
+export type TokenSymbol = keyof typeof TOKEN_CONFIG;
