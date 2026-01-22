@@ -7,13 +7,20 @@ interface IERC20 {
     function balanceOf(address account) external view returns (uint256);
 }
 
-contract SomniaFaucet {
+contract SomniaTestnetFaucetSuite {
     address public owner;
 
     error ClaimFail();
     error Unauthorized();
     error InvalidToken();
     error NotEnoughBalance();
+
+    event NativeDispensed(address indexed to, uint256 amount);
+    event ERC20Dispensed(
+        address indexed token,
+        address indexed to,
+        uint256 amount
+    );
 
     constructor() {
         owner = msg.sender;
@@ -30,6 +37,12 @@ contract SomniaFaucet {
         if (address(this).balance < amount) revert NotEnoughBalance();
         (bool ok, ) = payable(to).call{value: amount}("");
         if (!ok) revert ClaimFail();
+
+        emit NativeDispensed(to, amount);
+    }
+
+    function getBalNative() external view returns (uint256) {
+        return address(this).balance;
     }
 
     function claimERC20(
@@ -42,6 +55,12 @@ contract SomniaFaucet {
 
         bool ok = erc20.transfer(to, amount);
         if (!ok) revert ClaimFail();
+
+        emit ERC20Dispensed(token, to, amount);
+    }
+
+    function getBalErc20(address token) external view returns (uint256) {
+        return IERC20(token).balanceOf(address(this));
     }
 
     function changeOwner(address newOwner) external Owner {

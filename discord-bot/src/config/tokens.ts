@@ -1,13 +1,5 @@
-import "dotenv/config";
-
-export interface TokenSettings {
-  endpoint: string;
-  address: string | null;
-}
-
-const MAIN_ENTRY = process.env.MAIN_ENTRY;
-const claimNative = `${MAIN_ENTRY}/api/faucet/claim-stt`;
-const claimERC = `${MAIN_ENTRY}/api/faucet/claim-erc20`;
+import { TokenSettings } from "../interface/tokenSettings";
+import { claimERC, claimNative } from "../routes/routes.route";
 
 export const TOKEN_CONFIG: Record<string, TokenSettings> = {
   STT: {
@@ -20,3 +12,9 @@ export const TOKEN_CONFIG: Record<string, TokenSettings> = {
   },
 };
 
+export const tokenChoices = Object.keys(TOKEN_CONFIG).map((symbol) => ({
+  name: `${symbol} ${symbol === "STT" ? "(Native)" : "(ERC20)"}`,
+  value: symbol,
+}));
+
+export const tokenList = Object.keys(TOKEN_CONFIG).join(",");
