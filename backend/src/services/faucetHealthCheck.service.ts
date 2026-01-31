@@ -4,18 +4,8 @@ import { TOKEN_CONFIG, TokenSymbol } from "../config/tokens";
 import { db } from "../db/lowdb.init.";
 import { AlertStatus } from "../interface/faucet.interface";
 
-const HEALTH_CHECK_INTERVAL = 60000; // every minute
-
 export async function checkBalance() {
-  const now = Date.now();
-
   for (const [symbol, token] of Object.entries(TOKEN_CONFIG)) {
-    const last = db.data.alerts[symbol];
-
-    // Skip RPC if checked recently
-    if (last && now - last.updatedAt < HEALTH_CHECK_INTERVAL) {
-      continue;
-    }
     const bal = token.address
       ? await (faucetContract as any).getBalErc20(token.address)
       : await (faucetContract as any).getBalNative();
@@ -32,13 +22,6 @@ async function evaluateToken(symbol: TokenSymbol, balance: number) {
 
   const status = getStatus(balance, token.low);
   const last = db.data.alerts[symbol]?.lastStatus ?? "ok";
-
-  //   return if status have not change
-  // to avoid spam
-  if (status === last) {
-    await db.write();
-    return;
-  }
 
   if (status !== "ok") {
     const message = buildAlertMessage(symbol, balance, status);
