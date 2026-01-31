@@ -4,7 +4,7 @@ import { TOKEN_CONFIG, TokenSymbol } from "../config/tokens";
 import { db } from "../db/lowdb.init.";
 import { AlertStatus } from "../interface/faucet.interface";
 
-const HEALTH_CHECK_INTERVAL = 5 * 60 * 60 * 1000; // 5 hours 
+const HEALTH_CHECK_INTERVAL = 60000; // every minute
 
 export async function checkBalance() {
   const now = Date.now();
@@ -64,7 +64,7 @@ async function evaluateToken(symbol: TokenSymbol, balance: number) {
 function buildAlertMessage(
   symbol: string,
   balance: number,
-  status: AlertStatus
+  status: AlertStatus,
 ) {
   if (status === "low")
     return `⚠️ ${symbol} faucet balance is LOW\nCurrent: ${balance}`;
