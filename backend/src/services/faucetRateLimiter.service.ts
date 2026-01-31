@@ -110,7 +110,7 @@ export async function registerClaim(
       monthly: {},
     };
   }
-
+// 
   const tokenStats = db.data.token_stats[tokenKey] as TokenStatsJSON;
 
   // All-time
