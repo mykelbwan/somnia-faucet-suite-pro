@@ -102,4 +102,4 @@ The Faucet Suite is the foundation, with the following modules in development:
 
 AI-Support Integration (In Progress): Integrating my Somnia **[DevAssist](https://github.com/mykelbwan/somnia-dev-assist)**, a RAG-based AI agent directly into the Discord/Telegram bots. This allows the suite to handle both token distribution and complex technical queries using official Somnia documentation.
 
-Analytics Dashboard: A web-based interface for the DevRel team to monitor faucet health, track unique developer onboarding metrics.
+Analytics Dashboard
